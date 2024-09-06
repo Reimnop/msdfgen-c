@@ -95,6 +95,7 @@ add_library(msdfgen-core
     "${CMAKE_CURRENT_SOURCE_DIR}/msdfgen.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/msdfgen-c.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/msdfgen-c-common.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/msdfgen-c-impl.cpp"
     ${MSDFGEN_CORE_HEADERS} ${MSDFGEN_CORE_SOURCES})
 add_library(msdfgen::msdfgen-core ALIAS msdfgen-core)
 set_target_properties(msdfgen-core PROPERTIES PUBLIC_HEADER "${MSDFGEN_CORE_HEADERS}")

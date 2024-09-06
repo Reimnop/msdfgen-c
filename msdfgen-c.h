@@ -18,56 +18,116 @@
 #include "msdfgen-c-common.h"
 
 // Opaque pointer handle types
-typedef struct msdfgen_VectorView msdfgen_VectorView;
-typedef struct msdfgen_Shape msdfgen_Shape;
-typedef struct msdfgen_Contour msdfgen_Contour;
-typedef struct msdfgen_EdgeSegment msdfgen_EdgeSegment;
-typedef struct msdfgen_EdgeHolder msdfgen_EdgeHolder;
-typedef struct msdfgen_SDFTransformation msdfgen_SDFTransformation;
-typedef struct msdfgen_GeneratorConfig msdfgen_GeneratorConfig;
-typedef struct msdfgen_MSDFGeneratorConfig msdfgen_MSDFGeneratorConfig;
-typedef struct msdfgen_Projection msdfgen_Projection;
-typedef struct msdfgen_Range msdfgen_Range;
-typedef struct msdfgen_BitmapRef msdfgen_BitmapRef;
-typedef struct msdfgen_Bitmap msdfgen_Bitmap;
+typedef struct msdfgen_VectorView* msdfgen_VectorViewHandle;
+typedef struct msdfgen_Scanline* msdfgen_ScanlineHandle;
+typedef struct msdfgen_Shape* msdfgen_ShapeHandle;
+typedef struct msdfgen_Contour* msdfgen_ContourHandle;
+typedef struct msdfgen_EdgeHolder* msdfgen_EdgeHolderHandle;
+typedef struct msdfgen_Projection* msdfgen_ProjectionHandle;
+typedef struct msdfgen_DistanceMapping* msdfgen_DistanceMappingHandle;
+typedef struct msdfgen_SDFTransformation* msdfgen_SDFTransformationHandle;
+typedef struct msdfgen_GeneratorConfig* msdfgen_GeneratorConfigHandle;
+typedef struct msdfgen_MSDFGeneratorConfig* msdfgen_MSDFGeneratorConfigHandle;
 
 // C API functions
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_destroy(msdfgen_VectorView* vectorView);
-MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_data(msdfgen_VectorView* vectorView, msdfgen_Size* size, msdfgen_Void** data);
-MSDFGEN_PUBLIC msdfgen_Size  msdfgen_VectorView_elementSize(msdfgen_VectorView* vectorView);
-MSDFGEN_PUBLIC msdfgen_Size  msdfgen_VectorView_count(msdfgen_VectorView* vectorView);
-MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_at(msdfgen_VectorView* vectorView, msdfgen_Size index, msdfgen_Void* element);
-MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_set(msdfgen_VectorView* vectorView, msdfgen_Size index, msdfgen_Void* element);
-MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_add(msdfgen_VectorView* vectorView, msdfgen_Void* element);
-MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_insert(msdfgen_VectorView* vectorView, msdfgen_Size index, msdfgen_Void* element);
-MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_remove(msdfgen_VectorView* vectorView, msdfgen_Size index);
-MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_clear(msdfgen_VectorView* vectorView);
+// Vector view
+MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_destroy(msdfgen_VectorViewHandle vectorView);
+MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_data(msdfgen_VectorViewHandle vectorView, msdfgen_Size* count, msdfgen_Void** data);
+MSDFGEN_PUBLIC msdfgen_Size  msdfgen_VectorView_elementSize(msdfgen_VectorViewHandle vectorView);
+MSDFGEN_PUBLIC msdfgen_Size  msdfgen_VectorView_count(msdfgen_VectorViewHandle vectorView);
+MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_at(msdfgen_VectorViewHandle vectorView, msdfgen_Size index, msdfgen_Void* element);
+MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_set(msdfgen_VectorViewHandle vectorView, msdfgen_Size index, msdfgen_Void* element);
+MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_add(msdfgen_VectorViewHandle vectorView, msdfgen_Void* element);
+MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_insert(msdfgen_VectorViewHandle vectorView, msdfgen_Size index, msdfgen_Void* element);
+MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_remove(msdfgen_VectorViewHandle vectorView, msdfgen_Size index);
+MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_clear(msdfgen_VectorViewHandle vectorView);
 
-MSDFGEN_PUBLIC msdfgen_EdgeHolder* msdfgen_EdgeHolder_create();
-MSDFGEN_PUBLIC msdfgen_EdgeHolder* msdfgen_EdgeHolder_create0(msdfgen_EdgeSegment* segment);
-MSDFGEN_PUBLIC msdfgen_EdgeHolder* msdfgen_EdgeHolder_create1(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_EdgeColor edgeColor);
+// Edge holder (+ Edge segment)
+MSDFGEN_PUBLIC msdfgen_EdgeHolderHandle  msdfgen_EdgeHolder_createLinear(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_EdgeColor edgeColor);
+MSDFGEN_PUBLIC msdfgen_EdgeHolderHandle  msdfgen_EdgeHolder_createQuadratic(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_EdgeColor edgeColor);
+MSDFGEN_PUBLIC msdfgen_EdgeHolderHandle  msdfgen_EdgeHolder_createCubic(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_Point2 p3, msdfgen_EdgeColor edgeColor);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeHolder_destroy(msdfgen_EdgeHolderHandle edgeHolder);
+MSDFGEN_PUBLIC msdfgen_EdgeType          msdfgen_EdgeHolder_type(msdfgen_EdgeHolderHandle edgeHolder);
+MSDFGEN_PUBLIC msdfgen_Size              msdfgen_EdgeHolder_getControlPointCount(msdfgen_EdgeHolderHandle edgeHolder);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeHolder_getControlPoints(msdfgen_EdgeHolderHandle edgeHolder, msdfgen_Point2* points);
 
-MSDFGEN_PUBLIC msdfgen_Contour*    msdfgen_Contour_create();
-MSDFGEN_PUBLIC msdfgen_Void        msdfgen_Contour_destroy(msdfgen_Contour* contour);
-MSDFGEN_PUBLIC msdfgen_Void        msdfgen_Contour_addEdge(msdfgen_Contour* contour, msdfgen_EdgeHolder* edge);
-MSDFGEN_PUBLIC msdfgen_EdgeHolder* msdfgen_Contour_addEdge(msdfgen_Contour* contour);
-MSDFGEN_PUBLIC msdfgen_Void        msdfgen_Contour_bound(msdfgen_Contour* contour, msdfgen_Float* l, msdfgen_Float* b, msdfgen_Float* r, msdfgen_Float* t);
-MSDFGEN_PUBLIC msdfgen_Void        msdfgen_Contour_boundMiters(msdfgen_Contour* contour, msdfgen_Float* l, msdfgen_Float* b, msdfgen_Float* r, msdfgen_Float* t, msdfgen_Float border, msdfgen_Float miterLimit, msdfgen_Int polarity);
-MSDFGEN_PUBLIC msdfgen_Int         msdfgen_Contour_winding(msdfgen_Contour* contour);
-MSDFGEN_PUBLIC msdfgen_Void        msdfgen_Contour_reverse(msdfgen_Contour* contour);
-MSDFGEN_PUBLIC msdfgen_VectorView* msdfgen_Contour_getEdges();
+// Contour
+MSDFGEN_PUBLIC msdfgen_ContourHandle    msdfgen_Contour_create();
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_destroy(msdfgen_ContourHandle contour);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_addEdge(msdfgen_ContourHandle contour, msdfgen_EdgeHolderHandle edge);
+MSDFGEN_PUBLIC msdfgen_EdgeHolderHandle msdfgen_Contour_addEdgeNew(msdfgen_ContourHandle contour);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_bound(msdfgen_ContourHandle contour, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_boundMiters(msdfgen_ContourHandle contour, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t, msdfgen_Double border, msdfgen_Double miterLimit, msdfgen_Int polarity);
+MSDFGEN_PUBLIC msdfgen_Int              msdfgen_Contour_winding(msdfgen_ContourHandle contour);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_reverse(msdfgen_ContourHandle contour);
+MSDFGEN_PUBLIC msdfgen_VectorViewHandle msdfgen_Contour_createEdgesView();
 
-MSDFGEN_PUBLIC msdfgen_Shape* msdfgen_Shape_create();
-MSDFGEN_PUBLIC msdfgen_Void   msdfgen_Shape_destroy(msdfgen_Shape* shape);
+// TODO: Wrap Scanline
 
-MSDFGEN_PUBLIC msdfgen_Error msdfgen_generateSDF(msdfgen_BitmapRef* output, msdfgen_Shape* shape, msdfgen_SDFTransformation* transformation, msdfgen_GeneratorConfig* config);
-MSDFGEN_PUBLIC msdfgen_Error msdfgen_generatePSDF(msdfgen_BitmapRef* output, msdfgen_Shape* shape, msdfgen_SDFTransformation* transformation, msdfgen_GeneratorConfig* config);
-MSDFGEN_PUBLIC msdfgen_Error msdfgen_generateMSDF(msdfgen_BitmapRef* output, msdfgen_Shape* shape, msdfgen_SDFTransformation* transformation, msdfgen_MSDFGeneratorConfig* config);
-MSDFGEN_PUBLIC msdfgen_Error msdfgen_generateMTSDF(msdfgen_BitmapRef* output, msdfgen_Shape* shape, msdfgen_SDFTransformation* transformation, msdfgen_MSDFGeneratorConfig* config);
+// Shape
+MSDFGEN_PUBLIC msdfgen_ShapeHandle      msdfgen_Shape_create();
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_destroy(msdfgen_ShapeHandle shape);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_addContour(msdfgen_ShapeHandle shape, msdfgen_ContourHandle contour);
+MSDFGEN_PUBLIC msdfgen_ContourHandle    msdfgen_Shape_addContourNew(msdfgen_ShapeHandle shape);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_normalize(msdfgen_ShapeHandle shape);
+MSDFGEN_PUBLIC msdfgen_Bool             msdfgen_Shape_validate(msdfgen_ShapeHandle shape);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_bound(msdfgen_ShapeHandle shape, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_boundMiters(msdfgen_ShapeHandle shape, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t, msdfgen_Double border, msdfgen_Double miterLimit, msdfgen_Int polarity);
+MSDFGEN_PUBLIC msdfgen_Bounds           msdfgen_Shape_getBounds(msdfgen_ShapeHandle shape, msdfgen_Double border, msdfgen_Double miterLimit, msdfgen_Int polarity);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_scanline(msdfgen_ShapeHandle shape, msdfgen_ScanlineHandle line, msdfgen_Double y);
+MSDFGEN_PUBLIC msdfgen_Int              msdfgen_Shape_edgeCount(msdfgen_ShapeHandle shape);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_orientContours(msdfgen_ShapeHandle shape);
+MSDFGEN_PUBLIC msdfgen_Bool             msdfgen_Shape_getInverseYAxis(msdfgen_ShapeHandle shape);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_setInverseYAxis(msdfgen_ShapeHandle shape, msdfgen_Bool inverseYAxis);
+MSDFGEN_PUBLIC msdfgen_VectorViewHandle msdfgen_Shape_createContoursView();
+
+// Distance mapping
+MSDFGEN_PUBLIC msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_create();
+MSDFGEN_PUBLIC msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_createRange(msdfgen_Range range);
+MSDFGEN_PUBLIC msdfgen_Void                  msdfgen_DistanceMapping_destroy(msdfgen_DistanceMappingHandle distanceMapping);
+MSDFGEN_PUBLIC msdfgen_Double                msdfgen_DistanceMapping_map(msdfgen_Double d);
+MSDFGEN_PUBLIC msdfgen_Double                msdfgen_DistanceMapping_map_delta(msdfgen_Double d);
+MSDFGEN_PUBLIC msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_inverse(msdfgen_DistanceMappingHandle distanceMapping);
+
+// Projection
+MSDFGEN_PUBLIC msdfgen_ProjectionHandle msdfgen_Projection_create();
+MSDFGEN_PUBLIC msdfgen_ProjectionHandle msdfgen_Projection_createRange(msdfgen_Vector2* scale, msdfgen_Vector2* translate);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Projection_destroy(msdfgen_ProjectionHandle projection);
+MSDFGEN_PUBLIC msdfgen_Point2           msdfgen_Projection_project(msdfgen_ProjectionHandle projection, msdfgen_Point2* coord);
+MSDFGEN_PUBLIC msdfgen_Point2           msdfgen_Projection_unproject(msdfgen_ProjectionHandle projection, msdfgen_Point2* coord);
+MSDFGEN_PUBLIC msdfgen_Vector2          msdfgen_Projection_projectVector(msdfgen_ProjectionHandle projection, msdfgen_Vector2* vector);
+MSDFGEN_PUBLIC msdfgen_Vector2          msdfgen_Projection_unprojectVector(msdfgen_ProjectionHandle projection, msdfgen_Vector2* vector);
+MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_projectX(msdfgen_ProjectionHandle projection, msdfgen_Double x);
+MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_projectY(msdfgen_ProjectionHandle projection, msdfgen_Double y);
+MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_unprojectX(msdfgen_ProjectionHandle projection, msdfgen_Double x);
+MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_unprojectY(msdfgen_ProjectionHandle projection, msdfgen_Double y);
+
+// SDF transformation
+MSDFGEN_PUBLIC msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_create();
+MSDFGEN_PUBLIC msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_createProjectionDistanceMapping(msdfgen_ProjectionHandle projection, msdfgen_DistanceMappingHandle distanceMapping);
+MSDFGEN_PUBLIC msdfgen_ProjectionHandle        msdfgen_SDFTransformation_toBase(msdfgen_SDFTransformationHandle transformation);
+
+// Generator config
+MSDFGEN_PUBLIC msdfgen_GeneratorConfigHandle msdfgen_GeneratorConfig_create(msdfgen_Bool overlapSupport);
+MSDFGEN_PUBLIC msdfgen_Void                  msdfgen_GeneratorConfig_destroy(msdfgen_GeneratorConfigHandle config);
+MSDFGEN_PUBLIC msdfgen_Bool                  msdfgen_GeneratorConfig_getOverlapSupport(msdfgen_GeneratorConfigHandle config);
+MSDFGEN_PUBLIC msdfgen_Void                  msdfgen_GeneratorConfig_setOverlapSupport(msdfgen_GeneratorConfigHandle config, msdfgen_Bool overlapSupport);
+
+// MSDF generator config
+MSDFGEN_PUBLIC msdfgen_MSDFGeneratorConfigHandle msdfgen_MSDFGeneratorConfig_create(msdfgen_Bool overlapSupport, msdfgen_ErrorCorrectionConfig* errorCorrectionConfig);
+MSDFGEN_PUBLIC msdfgen_ErrorCorrectionConfig     msdfgen_MSDFGeneratorConfig_getErrorCorrectionConfig(msdfgen_MSDFGeneratorConfigHandle config);
+MSDFGEN_PUBLIC msdfgen_Void                      msdfgen_MSDFGeneratorConfig_setErrorCorrectionConfig(msdfgen_MSDFGeneratorConfigHandle config, msdfgen_ErrorCorrectionConfig* errorCorrectionConfig);
+MSDFGEN_PUBLIC msdfgen_GeneratorConfigHandle     msdfgen_MSDFGeneratorConfig_toBase(msdfgen_MSDFGeneratorConfigHandle config);
+
+// SDF generation
+MSDFGEN_PUBLIC msdfgen_Void msdfgen_generateSDF(msdfgen_BitmapRef* output, msdfgen_ShapeHandle shape, msdfgen_SDFTransformationHandle transformation, msdfgen_GeneratorConfigHandle config);
+MSDFGEN_PUBLIC msdfgen_Void msdfgen_generatePSDF(msdfgen_BitmapRef* output, msdfgen_ShapeHandle shape, msdfgen_SDFTransformationHandle transformation, msdfgen_GeneratorConfigHandle config);
+MSDFGEN_PUBLIC msdfgen_Void msdfgen_generateMSDF(msdfgen_BitmapRef* output, msdfgen_ShapeHandle shape, msdfgen_SDFTransformationHandle transformation, msdfgen_MSDFGeneratorConfigHandle config);
+MSDFGEN_PUBLIC msdfgen_Void msdfgen_generateMTSDF(msdfgen_BitmapRef* output, msdfgen_ShapeHandle shape, msdfgen_SDFTransformationHandle transformation, msdfgen_MSDFGeneratorConfigHandle config);
 
 #ifdef __cplusplus
 }
