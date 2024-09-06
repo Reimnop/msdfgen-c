@@ -2,15 +2,15 @@
 cmake_minimum_required(VERSION 3.15)
 include(cmake/version.cmake)
 
-option(MSDFGEN_CORE_ONLY "Only build the core library with no dependencies" OFF)
-option(MSDFGEN_BUILD_STANDALONE "Build the msdfgen standalone executable" ON)
-option(MSDFGEN_USE_VCPKG "Use vcpkg package manager to link project dependencies" ON)
+option(MSDFGEN_CORE_ONLY "Only build the core library with no dependencies" ON)
+option(MSDFGEN_BUILD_STANDALONE "Build the msdfgen standalone executable" OFF)
+option(MSDFGEN_USE_VCPKG "Use vcpkg package manager to link project dependencies" OFF)
 option(MSDFGEN_USE_OPENMP "Build with OpenMP support for multithreaded code" OFF)
 option(MSDFGEN_USE_CPP11 "Build with C++11 enabled" ON)
 option(MSDFGEN_USE_SKIA "Build with the Skia library" ON)
 option(MSDFGEN_INSTALL "Generate installation target" OFF)
 option(MSDFGEN_DYNAMIC_RUNTIME "Link dynamic runtime library instead of static" OFF)
-option(BUILD_SHARED_LIBS "Generate dynamic library files instead of static" OFF)
+option(BUILD_SHARED_LIBS "Generate dynamic library files instead of static" ON)
 
 if(MSDFGEN_CORE_ONLY AND MSDFGEN_USE_VCPKG)
     message(STATUS "Option MSDFGEN_USE_VCPKG ignored due to MSDFGEN_CORE_ONLY - core has no dependencies")
@@ -91,7 +91,11 @@ file(GLOB_RECURSE MSDFGEN_EXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "ext/
 file(GLOB_RECURSE MSDFGEN_EXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "ext/*.cpp" "lib/*.cpp")
 
 # Core library
-add_library(msdfgen-core "${CMAKE_CURRENT_SOURCE_DIR}/msdfgen.h" ${MSDFGEN_CORE_HEADERS} ${MSDFGEN_CORE_SOURCES})
+add_library(msdfgen-core
+    "${CMAKE_CURRENT_SOURCE_DIR}/msdfgen.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/msdfgen-c.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/msdfgen-c-common.h"
+    ${MSDFGEN_CORE_HEADERS} ${MSDFGEN_CORE_SOURCES})
 add_library(msdfgen::msdfgen-core ALIAS msdfgen-core)
 set_target_properties(msdfgen-core PROPERTIES PUBLIC_HEADER "${MSDFGEN_CORE_HEADERS}")
 set_property(TARGET msdfgen-core PROPERTY MSVC_RUNTIME_LIBRARY "${MSDFGEN_MSVC_RUNTIME}")
