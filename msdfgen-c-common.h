@@ -22,12 +22,12 @@ typedef double msdfgen_Double;
 typedef size_t msdfgen_Size;
 typedef void   msdfgen_Void;
 
-enum msdfgen_Error {
-    msdfgen_Error_Ok,
-    msdfgen_Error_OutOfBounds
+enum msdfgen_Error : msdfgen_Int {
+    msdfgen_Error_Ok = 0,
+    msdfgen_Error_OutOfBounds = 1
 };
 
-enum msdfgen_EdgeColor {
+enum msdfgen_EdgeColor : msdfgen_Int {
     msdfgen_EdgeColor_Black = 0,
     msdfgen_EdgeColor_Red = 1,
     msdfgen_EdgeColor_Green = 2,
