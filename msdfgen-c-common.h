@@ -38,21 +38,21 @@ enum msdfgen_EdgeColor : msdfgen_Int {
     msdfgen_EdgeColor_White = 7
 };
 
-enum msdfgen_EdgeType {
+enum msdfgen_EdgeType : msdfgen_Int {
     msdfgen_EdgeType_Unknown = 0,
     msdfgen_EdgeType_Linear = 1,
     msdfgen_EdgeType_Quadratic = 2,
     msdfgen_EdgeType_Cubic = 3
 };
 
-enum msdfgen_ErrorCorrectionConfig_Mode {
+enum msdfgen_ErrorCorrectionConfig_Mode : msdfgen_Int {
     msdfgen_ErrorCorrectionConfig_Mode_Disabled = 0,
     msdfgen_ErrorCorrectionConfig_Mode_Indiscriminate = 1,
     msdfgen_ErrorCorrectionConfig_Mode_EdgePriority = 2,
     msdfgen_ErrorCorrectionConfig_Mode_EdgeOnly = 3
 };
 
-enum msdfgen_ErrorCorrectionConfig_DistanceCheckMode {
+enum msdfgen_ErrorCorrectionConfig_DistanceCheckMode : msdfgen_Int {
     msdfgen_ErrorCorrectionConfig_Mode_DoNotCheckDistance = 0,
     msdfgen_ErrorCorrectionConfig_Mode_CheckDistanceAtEdge = 1,
     msdfgen_ErrorCorrectionConfig_Mode_AlwaysCheckDistance = 2
