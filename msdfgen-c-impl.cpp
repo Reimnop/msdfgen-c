@@ -349,8 +349,12 @@ msdfgen_MSDFGeneratorConfigHandle msdfgen_MSDFGeneratorConfig_create(msdfgen_Boo
 }
 
 msdfgen_ErrorCorrectionConfig msdfgen_MSDFGeneratorConfig_getErrorCorrectionConfig(msdfgen_MSDFGeneratorConfigHandle config) {
-    msdfgen::ErrorCorrectionConfig& cfg = *reinterpret_cast<msdfgen::ErrorCorrectionConfig*>(config);
+    msdfgen::ErrorCorrectionConfig& cfg = reinterpret_cast<msdfgen::MSDFGeneratorConfig*>(config)->errorCorrection;
     return { (msdfgen_ErrorCorrectionConfig_Mode)cfg.mode, (msdfgen_ErrorCorrectionConfig_DistanceCheckMode)cfg.distanceCheckMode, cfg.minDeviationRatio, cfg.minImproveRatio, cfg.buffer };
+}
+
+msdfgen_Void msdfgen_MSDFGeneratorConfig_setErrorCorrectionConfig(msdfgen_MSDFGeneratorConfigHandle config, msdfgen_ErrorCorrectionConfig* errorCorrectionConfig) {
+    reinterpret_cast<msdfgen::MSDFGeneratorConfig*>(config)->errorCorrection = *reinterpret_cast<msdfgen::ErrorCorrectionConfig*>(errorCorrectionConfig);
 }
 
 // SDF generation
