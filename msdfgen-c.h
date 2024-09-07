@@ -51,7 +51,7 @@ MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_remove(msdfgen_VectorViewHandle 
 MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_clear(msdfgen_VectorViewHandle vectorView);
 
 // Edge holder
-MSDFGEN_PUBLIC msdfgen_EdgeSegmentHandle msdfgen_EdgeHolder_getSegment();
+MSDFGEN_PUBLIC msdfgen_EdgeSegmentHandle msdfgen_EdgeHolder_getSegment(msdfgen_EdgeHolderHandle edgeHolder);
 MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeHolder_setSegment(msdfgen_EdgeHolderHandle edgeHolder, msdfgen_EdgeSegmentHandle segment);
 
 // Edge segment
