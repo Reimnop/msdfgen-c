@@ -91,7 +91,7 @@ MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_bound(msdfgen_ContourHan
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_boundMiters(msdfgen_ContourHandle contour, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t, msdfgen_Double border, msdfgen_Double miterLimit, msdfgen_Int polarity);
 MSDFGEN_PUBLIC msdfgen_Int              msdfgen_Contour_winding(msdfgen_ContourHandle contour);
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_reverse(msdfgen_ContourHandle contour);
-MSDFGEN_PUBLIC msdfgen_VectorViewHandle msdfgen_Contour_createEdgesView();
+MSDFGEN_PUBLIC msdfgen_VectorViewHandle msdfgen_Contour_createEdgesView(msdfgen_ContourHandle contour);
 
 // TODO: Wrap Scanline
 
@@ -109,7 +109,7 @@ MSDFGEN_PUBLIC msdfgen_Int              msdfgen_Shape_edgeCount(msdfgen_ShapeHan
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_orientContours(msdfgen_ShapeHandle shape);
 MSDFGEN_PUBLIC msdfgen_Bool             msdfgen_Shape_getInverseYAxis(msdfgen_ShapeHandle shape);
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_setInverseYAxis(msdfgen_ShapeHandle shape, msdfgen_Bool inverseYAxis);
-MSDFGEN_PUBLIC msdfgen_VectorViewHandle msdfgen_Shape_createContoursView();
+MSDFGEN_PUBLIC msdfgen_VectorViewHandle msdfgen_Shape_createContoursView(msdfgen_ShapeHandle shape);
 
 // Distance mapping
 MSDFGEN_PUBLIC msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_create();
