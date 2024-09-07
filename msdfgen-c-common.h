@@ -72,6 +72,10 @@ struct msdfgen_Range {
     msdfgen_Double lower, upper;
 };
 
+struct msdfgen_SignedDistance {
+    msdfgen_Double distance, dot;
+};
+
 struct msdfgen_ErrorCorrectionConfig {
     msdfgen_ErrorCorrectionConfig_Mode mode;
     msdfgen_ErrorCorrectionConfig_DistanceCheckMode distanceCheckMode;

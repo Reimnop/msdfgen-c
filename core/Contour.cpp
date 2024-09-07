@@ -21,7 +21,9 @@ void Contour::addEdge(EdgeHolder &&edge) {
 
 EdgeHolder &Contour::addEdge() {
     edges.resize(edges.size()+1);
-    return edges.back();
+    EdgeHolder &edge = edges.back();
+    edge.edgeSegment = NULL;
+    return edge;
 }
 
 static void boundPoint(double &l, double &b, double &r, double &t, Point2 p) {

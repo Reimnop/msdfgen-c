@@ -23,6 +23,10 @@ typedef struct msdfgen_Scanline* msdfgen_ScanlineHandle;
 typedef struct msdfgen_Shape* msdfgen_ShapeHandle;
 typedef struct msdfgen_Contour* msdfgen_ContourHandle;
 typedef struct msdfgen_EdgeHolder* msdfgen_EdgeHolderHandle;
+typedef struct msdfgen_EdgeSegment* msdfgen_EdgeSegmentHandle;
+typedef struct msdfgen_LinearSegment* msdfgen_LinearSegmentHandle;
+typedef struct msdfgen_QuadraticSegment* msdfgen_QuadraticSegmentHandle;
+typedef struct msdfgen_CubicSegment* msdfgen_CubicSegmentHandle;
 typedef struct msdfgen_Projection* msdfgen_ProjectionHandle;
 typedef struct msdfgen_DistanceMapping* msdfgen_DistanceMappingHandle;
 typedef struct msdfgen_SDFTransformation* msdfgen_SDFTransformationHandle;
@@ -46,20 +50,43 @@ MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_insert(msdfgen_VectorViewHandle 
 MSDFGEN_PUBLIC msdfgen_Error msdfgen_VectorView_remove(msdfgen_VectorViewHandle vectorView, msdfgen_Size index);
 MSDFGEN_PUBLIC msdfgen_Void  msdfgen_VectorView_clear(msdfgen_VectorViewHandle vectorView);
 
-// Edge holder (+ Edge segment)
-MSDFGEN_PUBLIC msdfgen_EdgeHolderHandle  msdfgen_EdgeHolder_createLinear(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_EdgeColor edgeColor);
-MSDFGEN_PUBLIC msdfgen_EdgeHolderHandle  msdfgen_EdgeHolder_createQuadratic(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_EdgeColor edgeColor);
-MSDFGEN_PUBLIC msdfgen_EdgeHolderHandle  msdfgen_EdgeHolder_createCubic(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_Point2 p3, msdfgen_EdgeColor edgeColor);
-MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeHolder_destroy(msdfgen_EdgeHolderHandle edgeHolder);
-MSDFGEN_PUBLIC msdfgen_EdgeType          msdfgen_EdgeHolder_type(msdfgen_EdgeHolderHandle edgeHolder);
-MSDFGEN_PUBLIC msdfgen_Size              msdfgen_EdgeHolder_getControlPointCount(msdfgen_EdgeHolderHandle edgeHolder);
-MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeHolder_getControlPoints(msdfgen_EdgeHolderHandle edgeHolder, msdfgen_Point2* points);
+// Edge holder
+MSDFGEN_PUBLIC msdfgen_EdgeSegmentHandle msdfgen_EdgeHolder_getSegment();
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeHolder_setSegment(msdfgen_EdgeHolderHandle edgeHolder, msdfgen_EdgeSegmentHandle segment);
+
+// Edge segment
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_destroy(msdfgen_EdgeSegmentHandle edge);
+MSDFGEN_PUBLIC msdfgen_EdgeSegmentHandle msdfgen_EdgeSegment_clone(msdfgen_EdgeSegmentHandle edge);
+MSDFGEN_PUBLIC msdfgen_EdgeType          msdfgen_EdgeSegment_type(msdfgen_EdgeSegmentHandle edge);
+MSDFGEN_PUBLIC msdfgen_Size              msdfgen_EdgeSegment_getControlPointsCount(msdfgen_EdgeSegmentHandle edge);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_getControlPoints(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2* points);
+MSDFGEN_PUBLIC msdfgen_Point2            msdfgen_EdgeSegment_point(msdfgen_EdgeSegmentHandle edge, msdfgen_Double t);
+MSDFGEN_PUBLIC msdfgen_Vector2           msdfgen_EdgeSegment_direction(msdfgen_EdgeSegmentHandle edge, msdfgen_Double t);
+MSDFGEN_PUBLIC msdfgen_Vector2           msdfgen_EdgeSegment_directionChange(msdfgen_EdgeSegmentHandle edge, msdfgen_Double t);
+MSDFGEN_PUBLIC msdfgen_SignedDistance    msdfgen_EdgeSegment_signedDistance(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2 origin, msdfgen_Double* t);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_distanceToPerpendicularDistance(msdfgen_EdgeSegmentHandle edge, msdfgen_SignedDistance* distance, msdfgen_Point2 origin, msdfgen_Double t);
+MSDFGEN_PUBLIC msdfgen_Int               msdfgen_EdgeSegment_scanlineIntersections(msdfgen_EdgeSegmentHandle edge, msdfgen_Double x[3], msdfgen_Int dy[3], msdfgen_Double y);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_bound(msdfgen_EdgeSegmentHandle edge, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_reverse(msdfgen_EdgeSegmentHandle edge);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_moveStartPoint(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2 to);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_moveEndPoint(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2 to);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_splitInThirds(msdfgen_EdgeSegmentHandle edge, msdfgen_EdgeSegmentHandle* part0, msdfgen_EdgeSegmentHandle* part1, msdfgen_EdgeSegmentHandle* part2);
+
+// Linear segment
+MSDFGEN_PUBLIC msdfgen_LinearSegmentHandle msdfgen_LinearSegment_create(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_EdgeColor edgeColor);
+MSDFGEN_PUBLIC msdfgen_EdgeSegmentHandle   msdfgen_LinearSegment_toBase(msdfgen_LinearSegmentHandle segment);
+
+// Quadratic segment
+MSDFGEN_PUBLIC msdfgen_QuadraticSegmentHandle msdfgen_QuadraticSegment_create(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_EdgeColor edgeColor);
+MSDFGEN_PUBLIC msdfgen_CubicSegmentHandle     msdfgen_QuadraticSegment_convertToCubic(msdfgen_QuadraticSegmentHandle segment);
+MSDFGEN_PUBLIC msdfgen_EdgeSegmentHandle      msdfgen_QuadraticSegment_toBase(msdfgen_QuadraticSegmentHandle segment);
+
+// Cubic segment
+MSDFGEN_PUBLIC msdfgen_CubicSegmentHandle msdfgen_CubicSegment_create(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_Point2 p3, msdfgen_EdgeColor edgeColor);
+MSDFGEN_PUBLIC msdfgen_EdgeSegmentHandle  msdfgen_CubicSegment_toBase(msdfgen_CubicSegmentHandle segment);
 
 // Contour
-MSDFGEN_PUBLIC msdfgen_ContourHandle    msdfgen_Contour_create();
-MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_destroy(msdfgen_ContourHandle contour);
-MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_addEdge(msdfgen_ContourHandle contour, msdfgen_EdgeHolderHandle edge);
-MSDFGEN_PUBLIC msdfgen_EdgeHolderHandle msdfgen_Contour_addEdgeNew(msdfgen_ContourHandle contour);
+MSDFGEN_PUBLIC msdfgen_EdgeHolderHandle msdfgen_Contour_addEdge(msdfgen_ContourHandle contour);
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_bound(msdfgen_ContourHandle contour, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t);
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Contour_boundMiters(msdfgen_ContourHandle contour, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t, msdfgen_Double border, msdfgen_Double miterLimit, msdfgen_Int polarity);
 MSDFGEN_PUBLIC msdfgen_Int              msdfgen_Contour_winding(msdfgen_ContourHandle contour);
@@ -71,8 +98,7 @@ MSDFGEN_PUBLIC msdfgen_VectorViewHandle msdfgen_Contour_createEdgesView();
 // Shape
 MSDFGEN_PUBLIC msdfgen_ShapeHandle      msdfgen_Shape_create();
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_destroy(msdfgen_ShapeHandle shape);
-MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_addContour(msdfgen_ShapeHandle shape, msdfgen_ContourHandle contour);
-MSDFGEN_PUBLIC msdfgen_ContourHandle    msdfgen_Shape_addContourNew(msdfgen_ShapeHandle shape);
+MSDFGEN_PUBLIC msdfgen_ContourHandle    msdfgen_Shape_addContour(msdfgen_ShapeHandle shape);
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_normalize(msdfgen_ShapeHandle shape);
 MSDFGEN_PUBLIC msdfgen_Bool             msdfgen_Shape_validate(msdfgen_ShapeHandle shape);
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_bound(msdfgen_ShapeHandle shape, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t);

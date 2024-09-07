@@ -22,7 +22,9 @@ void Shape::addContour(Contour &&contour) {
 
 Contour &Shape::addContour() {
     contours.resize(contours.size()+1);
-    return contours.back();
+    Contour &contour = contours.back();
+    contour.edges = std::vector<EdgeHolder>();
+    return contour;
 }
 
 bool Shape::validate() const {

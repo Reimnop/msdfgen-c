@@ -94,62 +94,123 @@ msdfgen_Void msdfgen_VectorView_clear(msdfgen_VectorViewHandle vectorView) {
     view->clear();
 }
 
-// Edge holder (+ Edge segment)
-msdfgen_EdgeHolderHandle msdfgen_EdgeHolder_createLinear(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_EdgeColor edgeColor) {
-    msdfgen::EdgeHolder* edgeHolder = new msdfgen::EdgeHolder(msdfgen::Point2(p0.x, p0.y), msdfgen::Point2(p1.x, p1.y), (msdfgen::EdgeColor)edgeColor);
-    return reinterpret_cast<msdfgen_EdgeHolderHandle>(edgeHolder);
+// Edge holder
+msdfgen_EdgeSegmentHandle msdfgen_EdgeHolder_getSegment(msdfgen_EdgeHolderHandle edgeHolder) {
+    return reinterpret_cast<msdfgen_EdgeSegmentHandle>(reinterpret_cast<msdfgen::EdgeHolder*>(edgeHolder)->edgeSegment);
 }
 
-msdfgen_EdgeHolderHandle msdfgen_EdgeHolder_createQuadratic(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_EdgeColor edgeColor) {
-    msdfgen::EdgeHolder* edgeHolder = new msdfgen::EdgeHolder(msdfgen::Point2(p0.x, p0.y), msdfgen::Point2(p1.x, p1.y), msdfgen::Point2(p2.x, p2.y), (msdfgen::EdgeColor)edgeColor);
-    return reinterpret_cast<msdfgen_EdgeHolderHandle>(edgeHolder);
+msdfgen_Void msdfgen_EdgeHolder_setSegment(msdfgen_EdgeHolderHandle edgeHolder, msdfgen_EdgeSegmentHandle segment) {
+    reinterpret_cast<msdfgen::EdgeHolder*>(edgeHolder)->edgeSegment = reinterpret_cast<msdfgen::EdgeSegment*>(segment);
 }
 
-msdfgen_EdgeHolderHandle msdfgen_EdgeHolder_createCubic(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_Point2 p3, msdfgen_EdgeColor edgeColor) {
-    msdfgen::EdgeHolder* edgeHolder = new msdfgen::EdgeHolder(msdfgen::Point2(p0.x, p0.y), msdfgen::Point2(p1.x, p1.y), msdfgen::Point2(p2.x, p2.y), msdfgen::Point2(p3.x, p3.y), (msdfgen::EdgeColor)edgeColor);
-    return reinterpret_cast<msdfgen_EdgeHolderHandle>(edgeHolder);
+// Edge segment
+msdfgen_Void msdfgen_EdgeSegment_destroy(msdfgen_EdgeSegmentHandle edge) {
+    delete reinterpret_cast<msdfgen::EdgeSegment*>(edge);
 }
 
-msdfgen_Void msdfgen_EdgeHolder_destroy(msdfgen_EdgeHolderHandle edgeHolder) {
-    delete reinterpret_cast<msdfgen::EdgeHolder*>(edgeHolder);
+msdfgen_EdgeSegmentHandle msdfgen_EdgeSegment_clone(msdfgen_EdgeSegmentHandle edge) {
+    return reinterpret_cast<msdfgen_EdgeSegmentHandle>(reinterpret_cast<msdfgen::EdgeSegment*>(edge)->clone());
 }
 
-msdfgen_EdgeType msdfgen_EdgeHolder_type(msdfgen_EdgeHolderHandle edgeHolder) {
-    msdfgen::EdgeHolder* holder = reinterpret_cast<msdfgen::EdgeHolder*>(edgeHolder);
-    msdfgen::EdgeSegment* segment = *holder;
-    return (msdfgen_EdgeType)segment->type();
+msdfgen_EdgeType msdfgen_EdgeSegment_type(msdfgen_EdgeSegmentHandle edge) {
+    return (msdfgen_EdgeType)reinterpret_cast<msdfgen::EdgeSegment*>(edge)->type();
 }
 
-msdfgen_Size msdfgen_EdgeHolder_getControlPointCount(msdfgen_EdgeHolderHandle edgeHolder) {
-    msdfgen::EdgeHolder* holder = reinterpret_cast<msdfgen::EdgeHolder*>(edgeHolder);
-    msdfgen::EdgeSegment* segment = *holder;
-    return segment->type() + 1;
+msdfgen_Size msdfgen_EdgeSegment_getControlPointsCount(msdfgen_EdgeSegmentHandle edge) {
+    return reinterpret_cast<msdfgen::EdgeSegment*>(edge)->type() + 1;
 }
 
-msdfgen_Void msdfgen_EdgeHolder_getControlPoints(msdfgen_EdgeHolderHandle edgeHolder, msdfgen_Point2* points) {
-    msdfgen::EdgeHolder* holder = reinterpret_cast<msdfgen::EdgeHolder*>(edgeHolder);
-    msdfgen::EdgeSegment* segment = *holder;
-    const msdfgen::Point2* controlPoints = segment->controlPoints();
-    for (size_t i = 0; i < segment->type() + 1; i++) {
-        points[i].x = controlPoints[i].x;
-        points[i].y = controlPoints[i].y;
-    }
+msdfgen_Void msdfgen_EdgeSegment_getControlPoints(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2* points) {
+    const msdfgen::Point2* controlPoints = reinterpret_cast<msdfgen::EdgeSegment*>(edge)->controlPoints();
+    for (int i = 0; i < reinterpret_cast<msdfgen::EdgeSegment*>(edge)->type() + 1; ++i)
+        points[i] = { controlPoints[i].x, controlPoints[i].y };
+}
+
+msdfgen_Point2 msdfgen_EdgeSegment_point(msdfgen_EdgeSegmentHandle edge, msdfgen_Double t) {
+    msdfgen::Point2 result = reinterpret_cast<msdfgen::EdgeSegment*>(edge)->point(t);
+    return { result.x, result.y };
+}
+
+msdfgen_Vector2 msdfgen_EdgeSegment_direction(msdfgen_EdgeSegmentHandle edge, msdfgen_Double t) {
+    msdfgen::Vector2 result = reinterpret_cast<msdfgen::EdgeSegment*>(edge)->direction(t);
+    return { result.x, result.y };
+}
+
+msdfgen_Vector2 msdfgen_EdgeSegment_directionChange(msdfgen_EdgeSegmentHandle edge, msdfgen_Double t) {
+    msdfgen::Vector2 result = reinterpret_cast<msdfgen::EdgeSegment*>(edge)->directionChange(t);
+    return { result.x, result.y };
+}
+
+msdfgen_SignedDistance msdfgen_EdgeSegment_signedDistance(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2 origin, msdfgen_Double* t) {
+    msdfgen::SignedDistance result = reinterpret_cast<msdfgen::EdgeSegment*>(edge)->signedDistance(msdfgen::Point2(origin.x, origin.y), *t);
+    return { result.distance, result.dot };
+}
+
+msdfgen_Void msdfgen_EdgeSegment_distanceToPerpendicularDistance(msdfgen_EdgeSegmentHandle edge, msdfgen_SignedDistance* distance, msdfgen_Point2 origin, msdfgen_Double t) {
+    reinterpret_cast<msdfgen::EdgeSegment*>(edge)->distanceToPerpendicularDistance(*reinterpret_cast<msdfgen::SignedDistance*>(distance), msdfgen::Point2(origin.x, origin.y), t);
+}
+
+msdfgen_Int msdfgen_EdgeSegment_scanlineIntersections(msdfgen_EdgeSegmentHandle edge, msdfgen_Double x[3], msdfgen_Int dy[3], msdfgen_Double y) {
+    return reinterpret_cast<msdfgen::EdgeSegment*>(edge)->scanlineIntersections(x, dy, y);
+}
+
+msdfgen_Void msdfgen_EdgeSegment_bound(msdfgen_EdgeSegmentHandle edge, msdfgen_Double* l, msdfgen_Double* b, msdfgen_Double* r, msdfgen_Double* t) {
+    reinterpret_cast<msdfgen::EdgeSegment*>(edge)->bound(*l, *b, *r, *t);
+}
+
+msdfgen_Void msdfgen_EdgeSegment_reverse(msdfgen_EdgeSegmentHandle edge) {
+    reinterpret_cast<msdfgen::EdgeSegment*>(edge)->reverse();
+}
+
+msdfgen_Void msdfgen_EdgeSegment_moveStartPoint(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2 to) {
+    reinterpret_cast<msdfgen::EdgeSegment*>(edge)->moveStartPoint(msdfgen::Point2(to.x, to.y));
+}
+
+msdfgen_Void msdfgen_EdgeSegment_moveEndPoint(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2 to) {
+    reinterpret_cast<msdfgen::EdgeSegment*>(edge)->moveEndPoint(msdfgen::Point2(to.x, to.y));
+}
+
+msdfgen_Void msdfgen_EdgeSegment_splitInThirds(msdfgen_EdgeSegmentHandle edge, msdfgen_EdgeSegmentHandle* part0, msdfgen_EdgeSegmentHandle* part1, msdfgen_EdgeSegmentHandle* part2) {
+    msdfgen::EdgeSegment* p0, *p1, *p2;
+    reinterpret_cast<msdfgen::EdgeSegment*>(edge)->splitInThirds(p0, p1, p2);
+    *part0 = reinterpret_cast<msdfgen_EdgeSegmentHandle>(p0);
+    *part1 = reinterpret_cast<msdfgen_EdgeSegmentHandle>(p1);
+    *part2 = reinterpret_cast<msdfgen_EdgeSegmentHandle>(p2);
+}
+
+// Linear segment
+msdfgen_LinearSegmentHandle msdfgen_LinearSegment_create(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_EdgeColor edgeColor) {
+    return reinterpret_cast<msdfgen_LinearSegmentHandle>(new msdfgen::LinearSegment(msdfgen::Point2(p0.x, p0.y), msdfgen::Point2(p1.x, p1.y), (msdfgen::EdgeColor)edgeColor));
+}
+
+msdfgen_EdgeSegmentHandle msdfgen_LinearSegment_toBase(msdfgen_LinearSegmentHandle segment) {
+    return reinterpret_cast<msdfgen_EdgeSegmentHandle>(reinterpret_cast<msdfgen::LinearSegment*>(segment));
+}
+
+// Quadratic segment
+msdfgen_QuadraticSegmentHandle msdfgen_QuadraticSegment_create(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_EdgeColor edgeColor) {
+    return reinterpret_cast<msdfgen_QuadraticSegmentHandle>(new msdfgen::QuadraticSegment(msdfgen::Point2(p0.x, p0.y), msdfgen::Point2(p1.x, p1.y), msdfgen::Point2(p2.x, p2.y), (msdfgen::EdgeColor)edgeColor));
+}
+
+msdfgen_CubicSegmentHandle msdfgen_QuadraticSegment_convertToCubic(msdfgen_QuadraticSegmentHandle segment) {
+    return reinterpret_cast<msdfgen_CubicSegmentHandle>(reinterpret_cast<msdfgen::QuadraticSegment*>(segment)->convertToCubic());
+}
+
+msdfgen_EdgeSegmentHandle msdfgen_QuadraticSegment_toBase(msdfgen_QuadraticSegmentHandle segment) {
+    return reinterpret_cast<msdfgen_EdgeSegmentHandle>(reinterpret_cast<msdfgen::QuadraticSegment*>(segment));
+}
+
+// Cubic segment
+msdfgen_CubicSegmentHandle msdfgen_CubicSegment_create(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_Point2 p2, msdfgen_Point2 p3, msdfgen_EdgeColor edgeColor) {
+    return reinterpret_cast<msdfgen_CubicSegmentHandle>(new msdfgen::CubicSegment(msdfgen::Point2(p0.x, p0.y), msdfgen::Point2(p1.x, p1.y), msdfgen::Point2(p2.x, p2.y), msdfgen::Point2(p3.x, p3.y), (msdfgen::EdgeColor)edgeColor));
+}
+
+msdfgen_EdgeSegmentHandle msdfgen_CubicSegment_toBase(msdfgen_CubicSegmentHandle segment) {
+    return reinterpret_cast<msdfgen_EdgeSegmentHandle>(reinterpret_cast<msdfgen::CubicSegment*>(segment));
 }
 
 // Contour
-msdfgen_ContourHandle msdfgen_Contour_create() {
-    return reinterpret_cast<msdfgen_ContourHandle>(new msdfgen::Contour());
-}
-
-msdfgen_Void msdfgen_Contour_destroy(msdfgen_ContourHandle contour) {
-    delete reinterpret_cast<msdfgen::Contour*>(contour);
-}
-
-msdfgen_Void msdfgen_Contour_addEdge(msdfgen_ContourHandle contour, msdfgen_EdgeHolderHandle edge) {
-    reinterpret_cast<msdfgen::Contour*>(contour)->addEdge(*reinterpret_cast<msdfgen::EdgeHolder*>(edge));
-}
-
-msdfgen_EdgeHolderHandle msdfgen_Contour_addEdgeNew(msdfgen_ContourHandle contour) {
+msdfgen_EdgeHolderHandle msdfgen_Contour_addEdge(msdfgen_ContourHandle contour) {
     msdfgen::EdgeHolder& edge = reinterpret_cast<msdfgen::Contour*>(contour)->addEdge();
     return reinterpret_cast<msdfgen_EdgeHolderHandle>(&edge);
 }
@@ -184,11 +245,7 @@ msdfgen_Void msdfgen_Shape_destroy(msdfgen_ShapeHandle shape) {
     delete reinterpret_cast<msdfgen::Shape*>(shape);
 }
 
-msdfgen_Void msdfgen_Shape_addContour(msdfgen_ShapeHandle shape, msdfgen_ContourHandle contour) {
-    reinterpret_cast<msdfgen::Shape*>(shape)->addContour(*reinterpret_cast<msdfgen::Contour*>(contour));
-}
-
-msdfgen_ContourHandle msdfgen_Shape_addContourNew(msdfgen_ShapeHandle shape) {
+msdfgen_ContourHandle msdfgen_Shape_addContour(msdfgen_ShapeHandle shape) {
     msdfgen::Contour& contour = reinterpret_cast<msdfgen::Shape*>(shape)->addContour();
     return reinterpret_cast<msdfgen_ContourHandle>(&contour);
 }

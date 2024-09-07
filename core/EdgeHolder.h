@@ -9,6 +9,8 @@ namespace msdfgen {
 class EdgeHolder {
 
 public:
+    EdgeSegment *edgeSegment;
+
     /// Swaps the edges held by a and b.
     static void swap(EdgeHolder &a, EdgeHolder &b);
 
@@ -32,9 +34,6 @@ public:
     const EdgeSegment *operator->() const;
     operator EdgeSegment *();
     operator const EdgeSegment *() const;
-
-private:
-    EdgeSegment *edgeSegment;
 
 };
 
