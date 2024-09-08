@@ -131,7 +131,7 @@ MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_unprojectY(msdfgen_Pr
 MSDFGEN_PUBLIC msdfgen_Vector2          msdfgen_Projection_getScale(msdfgen_ProjectionHandle projection);
 MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Projection_setScale(msdfgen_ProjectionHandle projection, msdfgen_Vector2* scale);
 MSDFGEN_PUBLIC msdfgen_Vector2          msdfgen_Projection_getTranslate(msdfgen_ProjectionHandle projection);
-MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Projection_setTranslate(msdfgen_ProjectionHandle projection, msdfgen_Vector2* scale);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Projection_setTranslate(msdfgen_ProjectionHandle projection, msdfgen_Vector2* translate);
 
 // SDF transformation
 MSDFGEN_PUBLIC msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_create();
