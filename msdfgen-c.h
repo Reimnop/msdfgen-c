@@ -70,6 +70,8 @@ MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_reverse(msdfgen_Edg
 MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_moveStartPoint(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2 to);
 MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_moveEndPoint(msdfgen_EdgeSegmentHandle edge, msdfgen_Point2 to);
 MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_splitInThirds(msdfgen_EdgeSegmentHandle edge, msdfgen_EdgeSegmentHandle* part0, msdfgen_EdgeSegmentHandle* part1, msdfgen_EdgeSegmentHandle* part2);
+MSDFGEN_PUBLIC msdfgen_EdgeColor         msdfgen_EdgeSegment_getEdgeColor(msdfgen_EdgeSegmentHandle edge);
+MSDFGEN_PUBLIC msdfgen_Void              msdfgen_EdgeSegment_setEdgeColor(msdfgen_EdgeSegmentHandle edge, msdfgen_EdgeColor edgeColor);
 
 // Linear segment
 MSDFGEN_PUBLIC msdfgen_LinearSegmentHandle msdfgen_LinearSegment_create(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_EdgeColor edgeColor);

@@ -178,6 +178,14 @@ msdfgen_Void msdfgen_EdgeSegment_splitInThirds(msdfgen_EdgeSegmentHandle edge, m
     *part2 = reinterpret_cast<msdfgen_EdgeSegmentHandle>(p2);
 }
 
+msdfgen_EdgeColor msdfgen_EdgeSegment_getEdgeColor(msdfgen_EdgeSegmentHandle edge) {
+    return (msdfgen_EdgeColor)reinterpret_cast<msdfgen::EdgeSegment*>(edge)->color;
+}
+
+msdfgen_Void msdfgen_EdgeSegment_setEdgeColor(msdfgen_EdgeSegmentHandle edge, msdfgen_EdgeColor color) {
+    reinterpret_cast<msdfgen::EdgeSegment*>(edge)->color = (msdfgen::EdgeColor)color;
+}
+
 // Linear segment
 msdfgen_LinearSegmentHandle msdfgen_LinearSegment_create(msdfgen_Point2 p0, msdfgen_Point2 p1, msdfgen_EdgeColor edgeColor) {
     return reinterpret_cast<msdfgen_LinearSegmentHandle>(new msdfgen::LinearSegment(msdfgen::Point2(p0.x, p0.y), msdfgen::Point2(p1.x, p1.y), (msdfgen::EdgeColor)edgeColor));
