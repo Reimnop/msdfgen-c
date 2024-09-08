@@ -376,6 +376,17 @@ msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_createProjectionDistan
     return reinterpret_cast<msdfgen_SDFTransformationHandle>(new msdfgen::SDFTransformation(*reinterpret_cast<msdfgen::Projection*>(projection), *reinterpret_cast<msdfgen::DistanceMapping*>(distanceMapping)));
 }
 
+msdfgen_DistanceMapping msdfgen_SDFTransformation_getDistanceMapping(msdfgen_SDFTransformationHandle transformation) {
+    msdfgen::SDFTransformation* sdfTransformation = reinterpret_cast<msdfgen::SDFTransformation*>(transformation);
+    msdfgen::DistanceMapping& mapping = sdfTransformation->distanceMapping;
+    return { mapping.scale, mapping.translate };
+}
+
+msdfgen_Void msdfgen_SDFTransformation_setDistanceMapping(msdfgen_SDFTransformationHandle transformation, msdfgen_DistanceMapping* distanceMapping) {
+    msdfgen::DistanceMapping mapping(distanceMapping->scale, distanceMapping->translate);
+    reinterpret_cast<msdfgen::SDFTransformation*>(transformation)->distanceMapping = mapping;
+}
+
 msdfgen_ProjectionHandle msdfgen_SDFTransformation_toBase(msdfgen_SDFTransformationHandle transformation) {
     return reinterpret_cast<msdfgen_ProjectionHandle>(transformation);
 }

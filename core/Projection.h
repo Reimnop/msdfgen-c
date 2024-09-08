@@ -9,6 +9,9 @@ namespace msdfgen {
 class Projection {
 
 public:
+    Vector2 scale;
+    Vector2 translate;
+
     Projection();
     Projection(const Vector2 &scale, const Vector2 &translate);
     /// Converts the shape coordinate to pixel coordinate.
@@ -27,10 +30,6 @@ public:
     double unprojectX(double x) const;
     /// Converts the Y-coordinate from pixel to shape coordinate space.
     double unprojectY(double y) const;
-
-private:
-    Vector2 scale;
-    Vector2 translate;
 
 };
 

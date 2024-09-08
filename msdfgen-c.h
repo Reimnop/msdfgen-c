@@ -128,10 +128,16 @@ MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_projectX(msdfgen_Proj
 MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_projectY(msdfgen_ProjectionHandle projection, msdfgen_Double y);
 MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_unprojectX(msdfgen_ProjectionHandle projection, msdfgen_Double x);
 MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_unprojectY(msdfgen_ProjectionHandle projection, msdfgen_Double y);
+MSDFGEN_PUBLIC msdfgen_Vector2          msdfgen_Projection_getScale(msdfgen_ProjectionHandle projection);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Projection_setScale(msdfgen_ProjectionHandle projection, msdfgen_Vector2* scale);
+MSDFGEN_PUBLIC msdfgen_Vector2          msdfgen_Projection_getTranslate(msdfgen_ProjectionHandle projection);
+MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Projection_setTranslate(msdfgen_ProjectionHandle projection, msdfgen_Vector2* scale);
 
 // SDF transformation
 MSDFGEN_PUBLIC msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_create();
 MSDFGEN_PUBLIC msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_createProjectionDistanceMapping(msdfgen_ProjectionHandle projection, msdfgen_DistanceMapping* distanceMapping);
+MSDFGEN_PUBLIC msdfgen_DistanceMapping         msdfgen_SDFTransformation_getDistanceMapping(msdfgen_SDFTransformationHandle transformation);
+MSDFGEN_PUBLIC msdfgen_Void                    msdfgen_SDFTransformation_setDistanceMapping(msdfgen_SDFTransformationHandle transformation, msdfgen_DistanceMapping* distanceMapping);
 MSDFGEN_PUBLIC msdfgen_ProjectionHandle        msdfgen_SDFTransformation_toBase(msdfgen_SDFTransformationHandle transformation);
 
 // Generator config
