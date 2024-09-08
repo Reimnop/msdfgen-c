@@ -307,7 +307,7 @@ msdfgen_Double msdfgen_DistanceMapping_map(msdfgen_DistanceMapping distanceMappi
     return mapping(d);
 }
 
-msdfgen_Double msdfgen_DistanceMapping_map_delta(msdfgen_DistanceMapping distanceMapping, msdfgen_Double d) {
+msdfgen_Double msdfgen_DistanceMapping_mapDelta(msdfgen_DistanceMapping distanceMapping, msdfgen_Double d) {
     msdfgen::DistanceMapping mapping(distanceMapping.scale, distanceMapping.translate);
     return mapping(msdfgen::DistanceMapping::Delta(d));
 }

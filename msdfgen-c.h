@@ -113,7 +113,7 @@ MSDFGEN_PUBLIC msdfgen_VectorViewHandle msdfgen_Shape_createContoursView(msdfgen
 // Distance mapping
 MSDFGEN_PUBLIC msdfgen_DistanceMapping msdfgen_DistanceMapping_createRange(msdfgen_Range range);
 MSDFGEN_PUBLIC msdfgen_Double          msdfgen_DistanceMapping_map(msdfgen_DistanceMapping distanceMapping, msdfgen_Double d);
-MSDFGEN_PUBLIC msdfgen_Double          msdfgen_DistanceMapping_map_delta(msdfgen_DistanceMapping distanceMapping, msdfgen_Double d);
+MSDFGEN_PUBLIC msdfgen_Double          msdfgen_DistanceMapping_mapDelta(msdfgen_DistanceMapping distanceMapping, msdfgen_Double d);
 MSDFGEN_PUBLIC msdfgen_DistanceMapping msdfgen_DistanceMapping_inverse(msdfgen_DistanceMapping distanceMapping);
 
 // Projection
