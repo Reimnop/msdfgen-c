@@ -152,6 +152,11 @@ MSDFGEN_PUBLIC msdfgen_ErrorCorrectionConfig     msdfgen_MSDFGeneratorConfig_get
 MSDFGEN_PUBLIC msdfgen_Void                      msdfgen_MSDFGeneratorConfig_setErrorCorrectionConfig(msdfgen_MSDFGeneratorConfigHandle config, msdfgen_ErrorCorrectionConfig* errorCorrectionConfig);
 MSDFGEN_PUBLIC msdfgen_GeneratorConfigHandle     msdfgen_MSDFGeneratorConfig_toBase(msdfgen_MSDFGeneratorConfigHandle config);
 
+// Edge coloring
+MSDFGEN_PUBLIC msdfgen_Void msdfgen_edgeColoringSimple(msdfgen_ShapeHandle shape, msdfgen_Double angleThreshold, msdfgen_ULong seed);
+MSDFGEN_PUBLIC msdfgen_Void msdfgen_edgeColoringInkTrap(msdfgen_ShapeHandle shape, msdfgen_Double angleThreshold, msdfgen_ULong seed);
+MSDFGEN_PUBLIC msdfgen_Void msdfgen_edgeColoringByDistance(msdfgen_ShapeHandle shape, msdfgen_Double angleThreshold, msdfgen_ULong seed);
+
 // SDF generation
 MSDFGEN_PUBLIC msdfgen_Void msdfgen_generateSDF(msdfgen_BitmapRef* output, msdfgen_ShapeHandle shape, msdfgen_SDFTransformationHandle transformation, msdfgen_GeneratorConfigHandle config);
 MSDFGEN_PUBLIC msdfgen_Void msdfgen_generatePSDF(msdfgen_BitmapRef* output, msdfgen_ShapeHandle shape, msdfgen_SDFTransformationHandle transformation, msdfgen_GeneratorConfigHandle config);

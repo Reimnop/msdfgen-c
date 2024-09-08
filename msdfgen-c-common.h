@@ -15,12 +15,13 @@
  *
  */
 
-typedef bool   msdfgen_Bool;
-typedef int    msdfgen_Int;
-typedef float  msdfgen_Float;
-typedef double msdfgen_Double;
-typedef size_t msdfgen_Size;
-typedef void   msdfgen_Void;
+typedef bool               msdfgen_Bool;
+typedef int                msdfgen_Int;
+typedef float              msdfgen_Float;
+typedef double             msdfgen_Double;
+typedef unsigned long long msdfgen_ULong;
+typedef size_t             msdfgen_Size;
+typedef void               msdfgen_Void;
 
 enum msdfgen_Error : msdfgen_Int {
     msdfgen_Error_Ok = 0,

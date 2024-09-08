@@ -422,6 +422,19 @@ msdfgen_Void msdfgen_MSDFGeneratorConfig_setErrorCorrectionConfig(msdfgen_MSDFGe
     reinterpret_cast<msdfgen::MSDFGeneratorConfig*>(config)->errorCorrection = *reinterpret_cast<msdfgen::ErrorCorrectionConfig*>(errorCorrectionConfig);
 }
 
+// Edge coloring
+msdfgen_Void msdfgen_edgeColoringSimple(msdfgen_ShapeHandle shape, msdfgen_Double angleThreshold, msdfgen_ULong seed) {
+    msdfgen::edgeColoringSimple(*reinterpret_cast<msdfgen::Shape*>(shape), angleThreshold, seed);
+}
+
+msdfgen_Void msdfgen_edgeColoringInkTrap(msdfgen_ShapeHandle shape, msdfgen_Double angleThreshold, msdfgen_ULong seed) {
+    msdfgen::edgeColoringInkTrap(*reinterpret_cast<msdfgen::Shape*>(shape), angleThreshold, seed);
+}
+
+msdfgen_Void msdfgen_edgeColoringByDistance(msdfgen_ShapeHandle shape, msdfgen_Double angleThreshold, msdfgen_ULong seed) {
+    msdfgen::edgeColoringByDistance(*reinterpret_cast<msdfgen::Shape*>(shape), angleThreshold, seed);
+}
+
 // SDF generation
 msdfgen_Void msdfgen_generateSDF(msdfgen_BitmapRef* output, msdfgen_ShapeHandle shape, msdfgen_SDFTransformationHandle transformation, msdfgen_GeneratorConfigHandle config) {
     msdfgen::generateSDF(*reinterpret_cast<msdfgen::BitmapRef<float, 1>*>(output), *reinterpret_cast<msdfgen::Shape*>(shape), *reinterpret_cast<msdfgen::SDFTransformation*>(transformation), *reinterpret_cast<msdfgen::GeneratorConfig*>(config));
