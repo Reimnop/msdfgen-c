@@ -297,28 +297,25 @@ msdfgen_VectorViewHandle msdfgen_Shape_createContoursView(msdfgen_ShapeHandle sh
 }
 
 // Distance mapping
-msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_create() {
-    return reinterpret_cast<msdfgen_DistanceMappingHandle>(new msdfgen::DistanceMapping());
+msdfgen_DistanceMapping msdfgen_DistanceMapping_createRange(msdfgen_Range range) {
+    msdfgen::DistanceMapping mapping(msdfgen::Range(range.lower, range.upper));
+    return { mapping.scale, mapping.translate };
 }
 
-msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_createRange(msdfgen_Range range) {
-    return reinterpret_cast<msdfgen_DistanceMappingHandle>(new msdfgen::DistanceMapping(msdfgen::Range(range.lower, range.upper)));
+msdfgen_Double msdfgen_DistanceMapping_map(msdfgen_DistanceMapping distanceMapping, msdfgen_Double d) {
+    msdfgen::DistanceMapping mapping(distanceMapping.scale, distanceMapping.translate);
+    return mapping(d);
 }
 
-msdfgen_Void msdfgen_DistanceMapping_destroy(msdfgen_DistanceMappingHandle distanceMapping) {
-    delete reinterpret_cast<msdfgen::DistanceMapping*>(distanceMapping);
+msdfgen_Double msdfgen_DistanceMapping_map_delta(msdfgen_DistanceMapping distanceMapping, msdfgen_Double d) {
+    msdfgen::DistanceMapping mapping(distanceMapping.scale, distanceMapping.translate);
+    return mapping(msdfgen::DistanceMapping::Delta(d));
 }
 
-msdfgen_Double msdfgen_DistanceMapping_map(msdfgen_DistanceMappingHandle distanceMapping, msdfgen_Double d) {
-    return (*reinterpret_cast<msdfgen::DistanceMapping*>(distanceMapping))(d);
-}
-
-msdfgen_Double msdfgen_DistanceMapping_map_delta(msdfgen_DistanceMappingHandle distanceMapping, msdfgen_Double d) {
-    return (*reinterpret_cast<msdfgen::DistanceMapping*>(distanceMapping))(msdfgen::DistanceMapping::Delta(d));
-}
-
-msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_inverse(msdfgen_DistanceMappingHandle distanceMapping) {
-    return reinterpret_cast<msdfgen_DistanceMappingHandle>(new msdfgen::DistanceMapping(reinterpret_cast<msdfgen::DistanceMapping*>(distanceMapping)->inverse()));
+msdfgen_DistanceMapping msdfgen_DistanceMapping_inverse(msdfgen_DistanceMapping distanceMapping) {
+    msdfgen::DistanceMapping mapping(distanceMapping.scale, distanceMapping.translate);
+    msdfgen::DistanceMapping inversedMapping = mapping.inverse();
+    return { inversedMapping.scale, inversedMapping.translate };
 }
 
 // Projection
@@ -375,7 +372,7 @@ msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_create() {
     return reinterpret_cast<msdfgen_SDFTransformationHandle>(new msdfgen::SDFTransformation());
 }
 
-msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_createProjectionDistanceMapping(msdfgen_ProjectionHandle projection, msdfgen_DistanceMappingHandle distanceMapping) {
+msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_createProjectionDistanceMapping(msdfgen_ProjectionHandle projection, msdfgen_DistanceMapping* distanceMapping) {
     return reinterpret_cast<msdfgen_SDFTransformationHandle>(new msdfgen::SDFTransformation(*reinterpret_cast<msdfgen::Projection*>(projection), *reinterpret_cast<msdfgen::DistanceMapping*>(distanceMapping)));
 }
 

@@ -17,6 +17,9 @@ public:
         inline operator double() const { return value; }
     };
 
+    double scale;
+    double translate;
+
     static DistanceMapping inverse(Range range);
 
     DistanceMapping();
@@ -25,12 +28,7 @@ public:
     double operator()(Delta d) const;
     DistanceMapping inverse() const;
 
-private:
-    double scale;
-    double translate;
-
     inline DistanceMapping(double scale, double translate) : scale(scale), translate(translate) { }
-
 };
 
 }

@@ -28,7 +28,6 @@ typedef struct msdfgen_LinearSegment* msdfgen_LinearSegmentHandle;
 typedef struct msdfgen_QuadraticSegment* msdfgen_QuadraticSegmentHandle;
 typedef struct msdfgen_CubicSegment* msdfgen_CubicSegmentHandle;
 typedef struct msdfgen_Projection* msdfgen_ProjectionHandle;
-typedef struct msdfgen_DistanceMapping* msdfgen_DistanceMappingHandle;
 typedef struct msdfgen_SDFTransformation* msdfgen_SDFTransformationHandle;
 typedef struct msdfgen_GeneratorConfig* msdfgen_GeneratorConfigHandle;
 typedef struct msdfgen_MSDFGeneratorConfig* msdfgen_MSDFGeneratorConfigHandle;
@@ -112,12 +111,10 @@ MSDFGEN_PUBLIC msdfgen_Void             msdfgen_Shape_setInverseYAxis(msdfgen_Sh
 MSDFGEN_PUBLIC msdfgen_VectorViewHandle msdfgen_Shape_createContoursView(msdfgen_ShapeHandle shape);
 
 // Distance mapping
-MSDFGEN_PUBLIC msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_create();
-MSDFGEN_PUBLIC msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_createRange(msdfgen_Range range);
-MSDFGEN_PUBLIC msdfgen_Void                  msdfgen_DistanceMapping_destroy(msdfgen_DistanceMappingHandle distanceMapping);
-MSDFGEN_PUBLIC msdfgen_Double                msdfgen_DistanceMapping_map(msdfgen_Double d);
-MSDFGEN_PUBLIC msdfgen_Double                msdfgen_DistanceMapping_map_delta(msdfgen_Double d);
-MSDFGEN_PUBLIC msdfgen_DistanceMappingHandle msdfgen_DistanceMapping_inverse(msdfgen_DistanceMappingHandle distanceMapping);
+MSDFGEN_PUBLIC msdfgen_DistanceMapping msdfgen_DistanceMapping_createRange(msdfgen_Range range);
+MSDFGEN_PUBLIC msdfgen_Double          msdfgen_DistanceMapping_map(msdfgen_DistanceMapping distanceMapping, msdfgen_Double d);
+MSDFGEN_PUBLIC msdfgen_Double          msdfgen_DistanceMapping_map_delta(msdfgen_DistanceMapping distanceMapping, msdfgen_Double d);
+MSDFGEN_PUBLIC msdfgen_DistanceMapping msdfgen_DistanceMapping_inverse(msdfgen_DistanceMapping distanceMapping);
 
 // Projection
 MSDFGEN_PUBLIC msdfgen_ProjectionHandle msdfgen_Projection_create();
@@ -134,7 +131,7 @@ MSDFGEN_PUBLIC msdfgen_Double           msdfgen_Projection_unprojectY(msdfgen_Pr
 
 // SDF transformation
 MSDFGEN_PUBLIC msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_create();
-MSDFGEN_PUBLIC msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_createProjectionDistanceMapping(msdfgen_ProjectionHandle projection, msdfgen_DistanceMappingHandle distanceMapping);
+MSDFGEN_PUBLIC msdfgen_SDFTransformationHandle msdfgen_SDFTransformation_createProjectionDistanceMapping(msdfgen_ProjectionHandle projection, msdfgen_DistanceMapping* distanceMapping);
 MSDFGEN_PUBLIC msdfgen_ProjectionHandle        msdfgen_SDFTransformation_toBase(msdfgen_SDFTransformationHandle transformation);
 
 // Generator config

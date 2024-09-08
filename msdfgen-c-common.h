@@ -76,6 +76,10 @@ struct msdfgen_SignedDistance {
     msdfgen_Double distance, dot;
 };
 
+struct msdfgen_DistanceMapping {
+    msdfgen_Double scale, translate;
+};
+
 struct msdfgen_ErrorCorrectionConfig {
     msdfgen_ErrorCorrectionConfig_Mode mode;
     msdfgen_ErrorCorrectionConfig_DistanceCheckMode distanceCheckMode;
